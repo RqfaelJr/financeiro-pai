@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balanço Patrimonial</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header-teal { background: #9dd6d6; }
+        .section-title { background: #9dd6d6; color: #fff; font-weight:700; }
+        .table-fixed tbody td { vertical-align: middle; }
+        .val-right { text-align: right; white-space: nowrap; }
+        .muted { color: #6c757d; }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4">
+        
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h4 mb-0">Balanço Patrimonial</h1>
+            <div>
+                <a href="relatorios.html" class="btn btn-outline-secondary btn-sm">← Voltar</a>
+                <button id="btnExport" class="btn btn-primary btn-sm ms-2">Exportar PDF</button>
+            </div>
+        </div>
+
+        <div id="periodoContainer" class="mb-3"></div>
+
+        <div class="row gx-4">
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="section-title p-2 rounded">Ativo</div>
+                        </div>
+                        <table class="table table-sm table-borderless table-fixed">
+                            <tbody id="ativosTbody">
+                                <tr><td colspan="2" class="text-center text-muted">Carregando ativos...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="section-title p-2 rounded">Passivo</div>
+                        </div>
+                        <table class="table table-sm table-borderless table-fixed">
+                            <tbody id="passivosTbody">
+                                <tr><td colspan="2" class="text-center text-muted">Carregando passivos...</td></tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="section-title p-2 rounded">Patrimônio Líquido</div>
+                        </div>
+                        <table class="table table-sm table-borderless table-fixed mt-2">
+                            <tbody id="patrimonioTbody">
+                                <tr><td colspan="2" class="text-center text-muted">Carregando patrimônio...</td></tr>
+                            </tbody>
+                            <tr class="table-secondary">
+                                <td class="fw-bold">Total do passivo e patrimônio líquido</td>
+                                <td id="totalPassivoPatrimonio" class="val-right fw-bold"></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script src="/js/api.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/balancopatrimonial.js"></script> 
+</body>
+</html>

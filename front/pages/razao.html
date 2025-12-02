@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relatório de Razão</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .section-title { background: #9dd6d6; color: #fff; font-weight:700; padding: 8px; border-radius: 4px; }
+    .val-right { text-align: right; white-space: nowrap; }
+    .muted { color: #6c757d; }
+  </style>
+</head>
+<body class="bg-light">
+  <div class="container py-4">
+    
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Razão - <span id="nomeConta"></span></h1>
+        <div>
+            <a href="relatorios.html" class="btn btn-outline-secondary btn-sm">← Voltar</a>
+            <button id="btnExport" class="btn btn-primary btn-sm ms-2">Exportar PDF</button>
+        </div>
+    </div>
+
+    <div id="alertPeriodoPlaceholder"></div>
+
+    <div id="cabecalhoPeriodo" class="mb-2">
+      <div><span class="fw-bold">Emissão:</span> <span id="emissaoHoje"></span></div>
+    </div>
+
+    <div class="section-title mb-2">Transações</div>
+    <table class="table table-sm table-bordered">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Histórico</th>
+          <th>Débito</th>
+          <th>Crédito</th>
+          <th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody id="transacoesTbody">
+        </tbody>
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <script src="/js/api.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/razao.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balancete de Verificação</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header-relatorio { background-color: #f8f9fa; padding: 20px; margin-bottom: 20px; border-radius: 5px; }
+        
+        .val-num { 
+            text-align: right; 
+            font-variant-numeric: tabular-nums; 
+            color: #212529; 
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .saldo-final-col {
+            background-color: #f8f9fa !important;
+            color: #000 !important;
+            font-weight: 700 !important; 
+        }
+
+        .border-left-thick { border-left: 2px solid #d3d7db !important; }
+        
+        .table-hover tbody tr:hover {
+            background-color: #e2e6ea;
+        }
+        
+        @media print {
+            .no-print { display: none !important; }
+            @page { size: landscape; margin: 0.5cm; }
+            .saldo-final-col { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid mt-3"> 
+    
+    <div class="header-relatorio border">
+        <h3 class="text-center mb-2">Balancete de Verificação</h3>
+        <p class="text-center mb-0 small">
+            <strong>Período:</strong> <span id="periodoTexto">Carregando...</span> 
+            | <strong>Emissão:</strong> <span id="dataEmissao"></span>
+        </p>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-sm table-bordered table-striped table-hover align-middle mb-0">
+            <thead class="table-dark small">
+                <tr>
+                    <th rowspan="2" class="text-center align-middle">Contas</th>
+                    <th colspan="2" class="text-center border-left-thick">Saldo Inicial</th>
+                    <th colspan="2" class="text-center border-left-thick">Movimentos do Período</th>
+                    <th colspan="2" class="text-center border-left-thick bg-secondary text-white">Saldo Final</th>
+                </tr>
+                <tr class="text-center">
+                    <th class="border-left-thick">Devedor</th>
+                    <th>Credor</th>
+                    <th class="border-left-thick">Devedor</th>
+                    <th>Credor</th>
+                    <th class="border-left-thick bg-secondary text-white">Devedor</th>
+                    <th class="bg-secondary text-white">Credor</th>
+                </tr>
+            </thead>
+            <tbody id="balanceteBody">
+                <tr><td colspan="7" class="text-center p-3">Carregando dados...</td></tr>
+            </tbody>
+            <tfoot id="balanceteFooter" class="table-group-divider fw-bold" style="font-size: 1.1rem; background-color: #e9ecef;">
+            </tfoot>
+        </table>
+    </div>
+
+    <div class="mt-3 mb-5 no-print d-flex gap-2 justify-content-end">
+        <button onclick="history.back()" class="btn btn-outline-secondary btn-sm">Voltar</button>
+        <button onclick="window.print()" class="btn btn-primary btn-sm">Imprimir Balancete</button>
+    </div>
+
+</div>
+<script src="/js/api.js"></script>
+<script src="/js/utils.js"></script>
+<script src="/js/balancete.js"></script>
+
+</body>
+</html>

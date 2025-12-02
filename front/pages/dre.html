@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstração do Resultado do Exercício (DRE)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .header-teal { background: #9dd6d6; color: white; }
+        .section-title { background: #f0f8ff; color: #4b2aad; font-weight: 700; padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid #4b2aad; }
+        .val-right { text-align: right; font-family: monospace; font-size: 1.1em; }
+        .total-row { background-color: #f8f9fa; font-weight: bold; border-top: 2px solid #dee2e6; }
+        .result-positive { color: #198754; } 
+        .result-negative { color: #dc3545; } 
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-4" id="contentToExport">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h4 mb-1">DRE - Demonstração do Resultado</h1>
+                <p class="text-muted mb-0" id="periodoDisplay">Carregando período...</p>
+            </div>
+            <div id="actionButtons">
+                <a href="relatorios.html" class="btn btn-outline-secondary btn-sm">← Voltar</a>
+                <button id="btnExport" class="btn btn-primary btn-sm ms-2">Exportar PDF</button>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                
+                <div class="section-title">RECEITAS OPERACIONAIS</div>
+                <table class="table table-hover table-sm mb-4">
+                    <tbody id="receitasTbody">
+                        <tr><td colspan="2" class="text-center text-muted">Carregando...</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td>Total de Receitas</td>
+                            <td class="val-right text-primary" id="totalReceitas">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="section-title" style="border-left-color: #dc3545; color: #dc3545; background: #fff5f5;">DESPESAS OPERACIONAIS</div>
+                <table class="table table-hover table-sm mb-4">
+                    <tbody id="despesasTbody">
+                        <tr><td colspan="2" class="text-center text-muted">Carregando...</td></tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="total-row">
+                            <td>Total de Despesas</td>
+                            <td class="val-right text-danger" id="totalDespesas">R$ 0,00</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <hr class="my-4">
+
+                <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #e9ecef;">
+                    <h3 class="h5 mb-0 fw-bold">RESULTADO DO EXERCÍCIO (LUCRO/PREJUÍZO)</h3>
+                    <h3 class="h4 mb-0 fw-bold" id="resultadoFinal">R$ 0,00</h3>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <script src="/js/api.js"></script>
+    <script src="/js/utils.js"></script>
+    <script src="/js/dre.js"></script> </body>
+</html>
