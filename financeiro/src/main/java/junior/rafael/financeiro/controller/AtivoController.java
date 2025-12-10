@@ -1,6 +1,7 @@
 package junior.rafael.financeiro.controller;
 
 import jakarta.transaction.Transactional;
+import junior.rafael.financeiro.component.VerificaDisponibilidadeEmDeletar;
 import junior.rafael.financeiro.domain.ativo.Ativo;
 import junior.rafael.financeiro.repository.AtivoRepository;
 import junior.rafael.financeiro.request.AtivoRequest;
@@ -22,6 +23,7 @@ public class AtivoController {
     private final AtivoRepository ativoRepository;
 
     private final BalancoPatrimonialService balancoPatrimonialService;
+    private final VerificaDisponibilidadeEmDeletar verificaDisponibilidadeEmDeletar;
 
     @GetMapping("/buscar")
     public ResponseEntity<List<AtivoResponse>> buscar() {
@@ -51,5 +53,17 @@ public class AtivoController {
 
         return ResponseEntity.ok(response);
 
+    }
+
+    @Transactional
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+
+        if (!verificaDisponibilidadeEmDeletar.execute(id)) {
+            ativoRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        throw new RuntimeException("Não é possível deletar o ativo pois ele está associado a outros registros.");
     }
 }

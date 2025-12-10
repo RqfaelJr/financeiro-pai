@@ -1,6 +1,7 @@
 package junior.rafael.financeiro.controller;
 
 import jakarta.transaction.Transactional;
+import junior.rafael.financeiro.component.VerificaDisponibilidadeEmDeletar;
 import junior.rafael.financeiro.domain.receita.Receita;
 import junior.rafael.financeiro.repository.ReceitaRepository;
 import junior.rafael.financeiro.request.ReceitaRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 public class ReceitaController {
 
     private final ReceitaRepository receitaRepository;
+    private final VerificaDisponibilidadeEmDeletar verificaDisponibilidadeEmDeletar;
 
     @GetMapping("/buscar")
     public ResponseEntity<List<ReceitaResponse>> buscar() {
@@ -31,5 +33,17 @@ public class ReceitaController {
         Receita receita = new Receita(request);
         receita = receitaRepository.save(receita);
         return ResponseEntity.ok(new ReceitaResponse(receita));
+    }
+
+    @Transactional
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+
+        if (!verificaDisponibilidadeEmDeletar.execute(id)) {
+            receitaRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        throw new RuntimeException("Não é possível deletar a receita pois ela está associado a outros registros.");
     }
 }

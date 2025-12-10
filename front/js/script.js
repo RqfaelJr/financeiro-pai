@@ -108,7 +108,8 @@ function abrirFormulario(tipo) {
     'formContainerAtivo',
     'formContainerPassivo',
     'formContainerDespesa',
-    'formContainerReceita'
+    'formContainerReceita',
+    'formContainerDeletar'
   ];
   containers.forEach(id => {
     const el = document.getElementById(id);
@@ -127,6 +128,9 @@ function abrirFormulario(tipo) {
       break;
     case 'receitas':
       if (document.getElementById('formContainerReceita')) document.getElementById('formContainerReceita').style.display = 'block';
+      break;
+    case 'deletar':
+      if (document.getElementById('formContainerDeletar')) document.getElementById('formContainerDeletar').style.display = 'block';
       break;
     default:
       console.warn(`Tipo desconhecido ao abrir formulário: ${tipo}`);
@@ -240,4 +244,117 @@ document.addEventListener('submit', async function (event) {
   } catch (erro) {
     if (dadosDiv) dadosDiv.textContent = `❌ Erro: ${erro.message}`;
   }
+});
+
+// Adicione este Listener para carregar os itens quando o tipo mudar
+document.getElementById('tipoDeletar')?.addEventListener('change', async function(event) {
+    const tipoSelecionado = event.target.value;
+    const selectItens = document.getElementById('idDeletar');
+    
+    // Reseta o select de itens
+    selectItens.innerHTML = '<option value="">Carregando...</option>';
+    selectItens.disabled = true;
+
+    if (!tipoSelecionado) {
+        selectItens.innerHTML = '<option value="">Selecione o tipo acima...</option>';
+        return;
+    }
+
+    try {
+        // Monta a URL: /api/v1/{tipo}/buscar
+        // Assumindo que API_BASE_URL já aponta para /api/v1 ou similar
+        const url = `${API_BASE_URL}/${tipoSelecionado}/buscar`;
+        
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error('Erro ao buscar itens');
+        }
+
+        const listaItens = await response.json();
+
+        // Limpa o select
+        selectItens.innerHTML = '<option value="">-- Selecione o item --</option>';
+
+        if (listaItens.length === 0) {
+            const option = document.createElement('option');
+            option.text = "Nenhum item cadastrado neste tipo";
+            selectItens.add(option);
+        } else {
+            listaItens.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.id;
+                
+                // Tenta pegar o nome ou descricao, dependendo do objeto (Ativos usam 'nome', Despesas usam 'descricao')
+                const label = item.nome || item.descricao || `Item #${item.id}`;
+                
+                // Formata para mostrar: "ID - Nome"
+                option.text = `${item.id} - ${label}`;
+                selectItens.appendChild(option);
+            });
+            selectItens.disabled = false; // Habilita o select agora que tem dados
+        }
+
+    } catch (erro) {
+        console.error(erro);
+        selectItens.innerHTML = '<option value="">Erro ao carregar itens</option>';
+        document.getElementById('dados').innerHTML = `<span class="text-danger">Erro na busca: ${erro.message}</span>`;
+    }
+});
+
+document.getElementById('formDeletar')?.addEventListener('submit', async function(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const tipo = formData.get('tipo');
+    const id = formData.get('id');
+
+    if (!tipo || !id) {
+        alert("Por favor, selecione o tipo e o ID.");
+        return;
+    }
+    if (!confirm(`Tem certeza que deseja EXCLUIR o item ${id} de ${tipo.toUpperCase()}?`)) {
+        return;
+    }
+    const dadosDiv = document.getElementById('dados');
+    
+    const url = `${API_BASE_URL}/${tipo}/deletar/${id}`; 
+
+    try {
+        dadosDiv.textContent = 'Processando exclusão...';
+        
+        const response = await fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            dadosDiv.innerHTML = `<span class="text-success">✅ Registro ID ${id} excluído com sucesso!</span>`;
+            event.target.reset(); 
+            document.getElementById('idDeletar').innerHTML = '<option value="">Selecione o tipo acima...</option>';
+            document.getElementById('idDeletar').disabled = true;
+        } else {
+            let mensagemErro = "Erro desconhecido ao deletar.";
+            
+            try {
+                const erroData = await response.json();
+
+                if (erroData.message) {
+                    mensagemErro = erroData.message;
+                } else if (erroData.error) {
+                    mensagemErro = erroData.error;
+                }
+            } catch (e) {
+                const textoErro = await response.text();
+                mensagemErro = textoErro.length > 100 ? textoErro.substring(0, 100) + "..." : textoErro;
+            }
+
+            throw new Error(mensagemErro);
+        }
+
+    } catch (erro) {
+        dadosDiv.innerHTML = `<span class="text-danger">❌ ${erro.message}</span>`;
+    }
 });

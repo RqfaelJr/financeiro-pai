@@ -1,6 +1,7 @@
 package junior.rafael.financeiro.controller;
 
 import jakarta.transaction.Transactional;
+import junior.rafael.financeiro.component.VerificaDisponibilidadeEmDeletar;
 import junior.rafael.financeiro.domain.despesa.Despesa;
 import junior.rafael.financeiro.repository.DespesaRepository;
 import junior.rafael.financeiro.request.DespesaRequest;
@@ -17,6 +18,7 @@ import java.util.List;
 public class DespesaController {
 
     private final DespesaRepository despesaRepository;
+    private final VerificaDisponibilidadeEmDeletar verificaDisponibilidadeEmDeletar;
 
     @GetMapping("/buscar")
     public ResponseEntity<List<DespesaResponse>> buscar() {
@@ -30,5 +32,17 @@ public class DespesaController {
         Despesa despesa = new Despesa(request);
         despesa = despesaRepository.save(despesa);
         return ResponseEntity.ok(new DespesaResponse(despesa));
+    }
+
+    @Transactional
+    @DeleteMapping("/deletar/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+
+        if (!verificaDisponibilidadeEmDeletar.execute(id)) {
+            despesaRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+
+        throw new RuntimeException("Não é possível deletar a despesa pois ela está associado a outros registros.");
     }
 }

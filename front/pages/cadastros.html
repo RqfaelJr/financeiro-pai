@@ -16,6 +16,7 @@
       <button class="btn btn-success" onclick="abrirFormulario('passivos')">Cadastrar Passivo</button>
       <button class="btn btn-warning" onclick="abrirFormulario('despesas')">Cadastrar Despesa</button>
       <button class="btn btn-danger" onclick="abrirFormulario('receitas')">Cadastrar Receita</button>
+      <button class="btn btn-outline-danger" onclick="abrirFormulario('deletar')">🗑️ Excluir Item</button>
     </div>
 
     <div id="formContainerAtivo" class="card shadow-sm p-4" style="display: none;">
@@ -75,7 +76,7 @@
       <h4 id="formTituloDespesa" class="mb-3"></h4>
       <form id="formCadastroDespesa">
         <div class="mb-3">
-          <label for="tipoDespesa" class="form-label">Tipo</label>
+          <label for="tipoDespesa" class="form-label">Tipo da Despesa</label>
           <select id="tipoDespesa" name="tipo" class="form-select" required>
             <option value="">-- Selecione --</option>
             <option value="FIXA">Custo Fixo</option>
@@ -96,7 +97,7 @@
       <h4 id="formTituloReceita" class="mb-3"></h4>
       <form id="formCadastroReceita">
         <div class="mb-3">
-          <label for="tipoReceita" class="form-label">Tipo</label>
+          <label for="tipoReceita" class="form-label">Tipo da Receita</label>
           <select id="tipoReceita" name="tipo" class="form-select" required>
           <option value="">-- Selecione --</option>
             <option value="SALARIO">Salário</option>
@@ -119,6 +120,35 @@
       <pre id="dados" class="bg-light p-3 rounded"></pre>
     </div>
   </div>
+
+  
+<div id="formContainerDeletar" class="card shadow-sm p-4 border-danger" style="display: none;">
+  <h4 class="mb-3 text-danger">Excluir Registro</h4>
+  <p class="text-muted">Selecione o tipo e informe o ID do item que deseja remover.</p>
+  
+  <form id="formDeletar">
+    <div class="mb-3">
+      <label for="tipoDeletar" class="form-label">Tipo do Item</label>
+      <select id="tipoDeletar" name="tipo" class="form-select" required>
+        <option value="">-- Selecione o Tipo --</option>
+        <option value="ativos">Ativo</option>
+        <option value="passivos">Passivo</option>
+        <option value="despesas">Despesa</option>
+        <option value="receitas">Receita</option>
+      </select>
+    </div>
+    
+    <div class="mb-3">
+    <label for="idDeletar" class="form-label">Selecione o Item para Excluir</label>
+    <select id="idDeletar" name="id" class="form-select" required disabled>
+      <option value="">Primeiro selecione o tipo acima...</option>
+    </select>
+  </div>
+
+    <button type="submit" class="btn btn-danger">Confirmar Exclusão</button>
+    <button type="button" class="btn btn-secondary" onclick="fecharFormulario()">Cancelar</button>
+  </form>
+</div>
 
   <script src="/js/api.js"></script>
   <script src="/js/script.js"></script> 
