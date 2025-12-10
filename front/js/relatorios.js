@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return `balancete.html?start=${formData.start}&end=${formData.end}`;
     }, 'startDateBalancete', 'endDateBalancete');
 
-    setupFormRedirect('periodoForm', 'periodoError', (formData) => {
-        return `balancopatrimonial.html?start=${formData.start}&end=${formData.end}`;
-    }, 'startDate', 'endDate');
+    setupFormRedirectSingleDate('periodoForm', 'periodoError', (formData) => {
+        return `balancopatrimonial.html?date=${formData.date}`;
+    }, 'date');
 
 });
 
@@ -80,5 +80,32 @@ function setupFormRedirect(formId, errorId, urlBuilderFn, startInputId = 'startD
         }
 
         window.location.href = urlBuilderFn({ start, end });
+    });
+}
+
+function setupFormRedirectSingleDate(formId, errorId, urlBuilderFn, dateInputId = 'date') {
+    const form = document.getElementById(formId);
+    if (!form) return;
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const errorEl = document.getElementById(errorId);
+        if (errorEl) errorEl.textContent = '';
+
+        const date = document.getElementById(dateInputId)?.value;
+
+        if (!date) {
+            if (errorEl) errorEl.textContent = "Selecione uma data.";
+            return;
+        }
+
+        const modalEl = form.closest('.modal');
+        if (modalEl) {
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+        }
+
+        window.location.href = urlBuilderFn({ date });
     });
 }

@@ -1,22 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     
 
-    const start = getQueryParam('start');
-    const end = getQueryParam('end');
+    const date = getQueryParam('date');
 
-    if (!start || !end) {
-        alert("Período não informado.");
+    if (!date) {
+        alert("Data não informada.");
         return;
     }
 
     const container = document.getElementById('periodoContainer');
     if (container) {
-        container.innerHTML = `<div class="alert alert-info py-2 mb-0"><span class="fw-bold">Período:</span> ${formatDateBR(start)} a ${formatDateBR(end)}</div>`;
+        container.innerHTML = `<div class="alert alert-info py-2 mb-0"><span class="fw-bold">Período:</span> ${formatDateBR(date)}</div>`;
     }
 
-    const ativoUrl = `${API_BASE_URL}/ativos/buscar/balanco-patrimonial/${start}/${end}`;
-    const passivoUrl = `${API_BASE_URL}/passivos/buscar/balanco-patrimonial/${start}/${end}`;
-    const patrimonioUrl = `${API_BASE_URL}/patrimonios-liquidos/buscar/balanco-patrimonial/${start}/${end}`;
+    const ativoUrl = `${API_BASE_URL}/ativos/buscar/balanco-patrimonial/${date}`;
+    const passivoUrl = `${API_BASE_URL}/passivos/buscar/balanco-patrimonial/${date}`;
+    const patrimonioUrl = `${API_BASE_URL}/patrimonios-liquidos/buscar/balanco-patrimonial/${date}`;
 
     Promise.all([
         fetch(ativoUrl).then(r => r.ok ? r.json() : []),
@@ -29,19 +28,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const btnExport = document.getElementById('btnExport');
-    if (btnExport) {
-        btnExport.addEventListener('click', function() {
-            const element = document.querySelector('.container');
-            const periodo = `_${formatDateFile(start)}_a_${formatDateFile(end)}`;
-            
-            html2pdf().set({
-                margin: 0.5,
-                filename: `BalancoPatrimonial${periodo}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            }).from(element).save();
-        });
+        if (btnExport) {
+            btnExport.addEventListener('click', function() {
+        const element = document.querySelector('.container');
+        const periodo = `_${formatDateFile(date)}`;
+        
+        html2pdf().set({
+            margin: 0.5,
+            filename: `BalancoPatrimonial${periodo}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        }).from(element).save();
+    });
+
     }
 });
 
