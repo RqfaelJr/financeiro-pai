@@ -181,10 +181,7 @@ document.addEventListener('submit', async function (event) {
     else if (formId.includes('receita')) tipoAtual = 'receitas';
   }
 
-  if (!tipoAtual) {
-    alert('Selecione um tipo antes de cadastrar!');
-    return;
-  }
+  
 
   const dadosDiv = document.getElementById('dados');
   const baseUrl = `${API_BASE_URL}/${tipoAtual}/criar`;
