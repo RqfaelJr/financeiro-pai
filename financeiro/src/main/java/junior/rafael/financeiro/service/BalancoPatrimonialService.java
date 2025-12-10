@@ -29,14 +29,14 @@ public class BalancoPatrimonialService {
     private final LancamentoRepository lancamentoRepository;
 
     public List<RelatorioResponse> gerarRelatorioAtivos(
-            LocalDate startDate, LocalDate endDate
+            LocalDate date
     ) {
 
         List<Ativo> ativos = ativoRepository.findAll();
 
         return ativos.stream().map(ativo -> {
-            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoNoPeriodo(ativo.getId(), startDate, endDate);
-            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoNoPeriodo(ativo.getId(), startDate, endDate);
+            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoAteAData(ativo.getId(), date);
+            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoAteAData(ativo.getId(), date);
 
             return new RelatorioResponse(
                     ativo.getNome(),
@@ -46,14 +46,14 @@ public class BalancoPatrimonialService {
     }
 
     public List<RelatorioResponse> gerarRelatorioPassivos(
-            LocalDate startDate, LocalDate endDate
+            LocalDate date
     ) {
 
         List<Passivo> passivos = passivoRepository.findAll();
 
         return passivos.stream().map(passivo -> {
-            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoNoPeriodo(passivo.getId(), startDate, endDate);
-            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoNoPeriodo(passivo.getId(), startDate, endDate);
+            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoAteAData(passivo.getId(), date);
+            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoAteAData(passivo.getId(), date);
 
             return new RelatorioResponse(
                     passivo.getNome(),
@@ -62,12 +62,12 @@ public class BalancoPatrimonialService {
         }).toList();
     }
 
-    public List<RelatorioResponse> gerarRelatorioPatrimonioLiquido(LocalDate startDate, LocalDate endDate) {
+    public List<RelatorioResponse> gerarRelatorioPatrimonioLiquido(LocalDate date) {
 
         List<PatrimonioLiquido> pl = patrimonioLiquidoRepository.findAll();
         List<RelatorioResponse> relatorio = new ArrayList<>(pl.stream().map(p -> {
-            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoNoPeriodo(p.getId(), startDate, endDate);
-            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoNoPeriodo(p.getId(), startDate, endDate);
+            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoAteAData(p.getId(), date);
+            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoAteAData(p.getId(), date);
 
             return new RelatorioResponse(
                     p.getNome(),
@@ -76,25 +76,25 @@ public class BalancoPatrimonialService {
         }).toList());
 
         relatorio.
-                add(gerarRelatorioResultado(startDate, endDate));
+                add(gerarRelatorioResultado(date));
 
         return relatorio;
     }
 
-    private RelatorioResponse gerarRelatorioResultado(LocalDate startDate, LocalDate endDate) {
+    private RelatorioResponse gerarRelatorioResultado(LocalDate date) {
 
         List<Receita> receitas = receitaRepository.findAll();
         BigDecimal valorReceita = receitas.stream().map(p -> {
-            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoNoPeriodo(p.getId(), startDate, endDate);
-            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoNoPeriodo(p.getId(), startDate, endDate);
+            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoAteAData(p.getId(), date);
+            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoAteAData(p.getId(), date);
 
             return credito.subtract(debito);
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         List<Despesa> despesas = despesaRepository.findAll();
         BigDecimal valorDespesa = despesas.stream().map(p -> {
-            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoNoPeriodo(p.getId(), startDate, endDate);
-            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoNoPeriodo(p.getId(), startDate, endDate);
+            BigDecimal debito = lancamentoRepository.findSomaValorByIdInLancamentosDebitoAteAData(p.getId(), date);
+            BigDecimal credito = lancamentoRepository.findSomaValorByIdInLancamentosCreditoAteAData(p.getId(), date);
 
             return debito.subtract(credito);
         }).reduce(BigDecimal.ZERO, BigDecimal::add);

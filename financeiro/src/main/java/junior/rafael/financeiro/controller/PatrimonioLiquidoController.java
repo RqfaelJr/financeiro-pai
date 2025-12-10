@@ -31,12 +31,12 @@ public class PatrimonioLiquidoController {
         return ResponseEntity.ok(pl.stream().map(PatrimonioLiquidoResponse::new).toList());
     }
 
-    @GetMapping("/buscar/balanco-patrimonial/{startDate}/{endDate}")
+    @GetMapping("/buscar/balanco-patrimonial/{date}")
     public ResponseEntity<List<RelatorioResponse>> balancoPatrimonial(
-            @PathVariable LocalDate startDate, @PathVariable LocalDate endDate
+            @PathVariable LocalDate date
     ) {
 
-        var response = balancoPatrimonialService.gerarRelatorioPatrimonioLiquido(startDate, endDate);
+        var response = balancoPatrimonialService.gerarRelatorioPatrimonioLiquido(date);
 
         return ResponseEntity.ok(response);
     }

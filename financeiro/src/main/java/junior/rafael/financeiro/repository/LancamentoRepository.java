@@ -28,6 +28,18 @@ public interface LancamentoRepository extends JpaRepository<Lancamento, Long> {
             "AND l.data BETWEEN :startDate AND :endDate")
     BigDecimal findSomaValorByIdInLancamentosCreditoNoPeriodo(Long id, LocalDate startDate, LocalDate endDate);
 
+    @Query("SELECT COALESCE(SUM(l.valor), 0) " +
+            "FROM Lancamento l " +
+            "WHERE l.debito.id = :id " +
+            "AND l.data <= :date")
+    BigDecimal findSomaValorByIdInLancamentosDebitoAteAData(Long id, LocalDate date);
+
+    @Query("SELECT COALESCE(SUM(l.valor), 0) " +
+            "FROM Lancamento l " +
+            "WHERE l.credito.id = :id " +
+            "AND l.data <= :date")
+    BigDecimal findSomaValorByIdInLancamentosCreditoAteAData(Long id, LocalDate date);
+
     @Query("""
     SELECT l FROM Lancamento l
     WHERE (l.debito.id = :id OR l.credito.id = :id)

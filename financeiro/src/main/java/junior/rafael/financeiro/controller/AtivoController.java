@@ -42,13 +42,12 @@ public class AtivoController {
         return ResponseEntity.ok(new AtivoResponse(ativo));
     }
 
-    @GetMapping("/buscar/balanco-patrimonial/{startDate}/{endDate}")
+    @GetMapping("/buscar/balanco-patrimonial/{date}")
     public ResponseEntity<List<RelatorioResponse>> balancoPatrimonial(
-            @PathVariable LocalDate startDate,
-            @PathVariable LocalDate endDate
+            @PathVariable LocalDate date
     ) {
 
-        var response = balancoPatrimonialService.gerarRelatorioAtivos(startDate, endDate);
+        var response = balancoPatrimonialService.gerarRelatorioAtivos(date);
 
         return ResponseEntity.ok(response);
 
