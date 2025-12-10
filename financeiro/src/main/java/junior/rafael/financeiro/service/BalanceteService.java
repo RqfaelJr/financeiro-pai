@@ -23,36 +23,36 @@ public class BalanceteService {
         List<Lancamento> lancamentosAtivosCredito = lancamentoRepository.findAllAtivosCredito(endDate);
         BigDecimal ativoInicialD = getSaldoInicial(lancamentosAtivosDebito, startDate);
         BigDecimal ativoInicialC =getSaldoInicial(lancamentosAtivosCredito, startDate);
-        BigDecimal ativoMovD = getSaldoMovimentacao(lancamentosAtivosDebito);
-        BigDecimal ativoMovC = getSaldoMovimentacao(lancamentosAtivosCredito);
+        BigDecimal ativoMovD = getSaldoMovimentacao(lancamentosAtivosDebito, startDate);
+        BigDecimal ativoMovC = getSaldoMovimentacao(lancamentosAtivosCredito, startDate);
 
         List<Lancamento> lancamentosPassivosDebito = lancamentoRepository.findAllPassivosDebito(endDate);
         List<Lancamento> lancamentosPassivosCredito = lancamentoRepository.findAllPassivosCredito(endDate);
         BigDecimal passivoInicialD = getSaldoInicial(lancamentosPassivosDebito, startDate);
         BigDecimal passivoInicialC =getSaldoInicial(lancamentosPassivosCredito, startDate);
-        BigDecimal passivoMovD = getSaldoMovimentacao(lancamentosPassivosDebito);
-        BigDecimal passivoMovC = getSaldoMovimentacao(lancamentosPassivosCredito);
+        BigDecimal passivoMovD = getSaldoMovimentacao(lancamentosPassivosDebito, startDate);
+        BigDecimal passivoMovC = getSaldoMovimentacao(lancamentosPassivosCredito, startDate);
 
         List<Lancamento> lancamentosReceitasDebito = lancamentoRepository.findAllReceitasDebito(endDate);
         List<Lancamento> lancamentosReceitasCredito = lancamentoRepository.findAllReceitasCredito(endDate);
         BigDecimal receitasInicialD = getSaldoInicial(lancamentosReceitasDebito, startDate);
         BigDecimal receitasInicialC =getSaldoInicial(lancamentosReceitasCredito, startDate);
-        BigDecimal receitasMovD = getSaldoMovimentacao(lancamentosReceitasDebito);
-        BigDecimal receitasMovC = getSaldoMovimentacao(lancamentosReceitasCredito);
+        BigDecimal receitasMovD = getSaldoMovimentacao(lancamentosReceitasDebito, startDate);
+        BigDecimal receitasMovC = getSaldoMovimentacao(lancamentosReceitasCredito, startDate);
 
         List<Lancamento> lancamentosDespesasDebito = lancamentoRepository.findAllDespesasDebito(endDate);
         List<Lancamento> lancamentosDespesasCredito = lancamentoRepository.findAllDespesasCredito(endDate);
         BigDecimal despesasInicialD = getSaldoInicial(lancamentosDespesasDebito, startDate);
         BigDecimal despesasInicialC = getSaldoInicial(lancamentosDespesasCredito, startDate);
-        BigDecimal despesasMovD = getSaldoMovimentacao(lancamentosDespesasDebito);
-        BigDecimal despesasMovC = getSaldoMovimentacao(lancamentosDespesasCredito);
+        BigDecimal despesasMovD = getSaldoMovimentacao(lancamentosDespesasDebito, startDate);
+        BigDecimal despesasMovC = getSaldoMovimentacao(lancamentosDespesasCredito, startDate);
 
         List<Lancamento> lancamentosPLDebito = lancamentoRepository.findAllPLDebito(endDate);
         List<Lancamento> lancamentosPLCredito = lancamentoRepository.findAllPLCredito(endDate);
         BigDecimal PLInicialD = getSaldoInicial(lancamentosPLDebito, startDate);
         BigDecimal PLInicialC =getSaldoInicial(lancamentosPLCredito, startDate);
-        BigDecimal PLMovD = getSaldoMovimentacao(lancamentosPLDebito);
-        BigDecimal PLMovC = getSaldoMovimentacao(lancamentosPLCredito);
+        BigDecimal PLMovD = getSaldoMovimentacao(lancamentosPLDebito, startDate);
+        BigDecimal PLMovC = getSaldoMovimentacao(lancamentosPLCredito, startDate);
 
         BalanceteResponse ativos = new BalanceteResponse("Ativo",
                 ativoInicialD.subtract(ativoInicialC), BigDecimal.ZERO,
@@ -101,8 +101,9 @@ public class BalanceteService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private BigDecimal getSaldoMovimentacao(List<Lancamento> lancamentos) {
+    private BigDecimal getSaldoMovimentacao(List<Lancamento> lancamentos, LocalDate startDate) {
         return lancamentos.stream()
+                .filter(l -> l.getData().isAfter(startDate))
                 .map(Lancamento::getValor)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
