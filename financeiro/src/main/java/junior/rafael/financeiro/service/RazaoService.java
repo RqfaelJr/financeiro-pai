@@ -44,7 +44,7 @@ public class RazaoService {
 
         var saldoInicial = new RazaoResponse(null, "Saldo Inicial", calcularSaldoInicial(id, startDate, ehAtivoOuDespesa), "I");
 
-        var saldoFinal = new RazaoResponse(null, "Saldo Final", calcularSaldoFinal(saldoDebito, saldoCredito, ehAtivoOuDespesa), "F");
+        var saldoFinal = new RazaoResponse(null, "Saldo Final", calcularSaldoFinal(saldoInicial.valor(), saldoDebito, saldoCredito, ehAtivoOuDespesa), "F");
 
         return Stream.concat(
                 Stream.concat(
@@ -67,13 +67,13 @@ public class RazaoService {
         return totalCredito.subtract(totalDebito);
     }
 
-    private BigDecimal calcularSaldoFinal(BigDecimal saldoDebito, BigDecimal saldoCredito, Boolean ehAtivoOuDespesa) {
+    private BigDecimal calcularSaldoFinal(BigDecimal saldoInicial, BigDecimal saldoDebito, BigDecimal saldoCredito, Boolean ehAtivoOuDespesa) {
 
         if (ehAtivoOuDespesa) {
-            return saldoDebito.subtract(saldoCredito);
+            return saldoInicial.add(saldoDebito).subtract(saldoCredito);
         }
 
-        return saldoCredito.subtract(saldoDebito);
+        return saldoInicial.add(saldoCredito).subtract(saldoDebito);
 
     }
 }

@@ -1,5 +1,6 @@
 package junior.rafael.financeiro.controller;
 
+import jakarta.transaction.Transactional;
 import junior.rafael.financeiro.domain.passivo.Passivo;
 import junior.rafael.financeiro.repository.PassivoRepository;
 import junior.rafael.financeiro.request.PassivoRequest;
@@ -28,6 +29,7 @@ public class PassivoController {
         return ResponseEntity.ok(passivos.stream().map(PassivoResponse::new).toList());
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<PassivoResponse> criar(@RequestBody PassivoRequest request) {
         Passivo passivo = new Passivo(request);

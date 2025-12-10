@@ -1,5 +1,6 @@
 package junior.rafael.financeiro.controller;
 
+import jakarta.transaction.Transactional;
 import junior.rafael.financeiro.domain.despesa.Despesa;
 import junior.rafael.financeiro.repository.DespesaRepository;
 import junior.rafael.financeiro.request.DespesaRequest;
@@ -23,6 +24,7 @@ public class DespesaController {
         return ResponseEntity.ok(despesas.stream().map(DespesaResponse::new).toList());
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<DespesaResponse> criar(@RequestBody DespesaRequest request) {
         Despesa despesa = new Despesa(request);

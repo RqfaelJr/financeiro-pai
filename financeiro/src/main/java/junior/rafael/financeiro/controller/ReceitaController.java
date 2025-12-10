@@ -1,5 +1,6 @@
 package junior.rafael.financeiro.controller;
 
+import jakarta.transaction.Transactional;
 import junior.rafael.financeiro.domain.receita.Receita;
 import junior.rafael.financeiro.repository.ReceitaRepository;
 import junior.rafael.financeiro.request.ReceitaRequest;
@@ -24,6 +25,7 @@ public class ReceitaController {
         return ResponseEntity.ok(receitas.stream().map(ReceitaResponse::new).toList());
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<ReceitaResponse> criar(@RequestBody ReceitaRequest request) {
         Receita receita = new Receita(request);

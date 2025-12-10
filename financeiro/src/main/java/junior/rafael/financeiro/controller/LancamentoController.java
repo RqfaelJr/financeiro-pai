@@ -10,6 +10,7 @@ import junior.rafael.financeiro.response.LancamentoResponse;
 import junior.rafael.financeiro.service.VerificaIncosistenciaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class LancamentoController {
         return ResponseEntity.ok(response);
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<LancamentoResponse> post(@RequestBody LancamentoRequest request) {
 

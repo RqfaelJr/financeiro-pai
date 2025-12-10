@@ -1,5 +1,6 @@
 package junior.rafael.financeiro.controller;
 
+import jakarta.transaction.Transactional;
 import junior.rafael.financeiro.domain.ativo.Ativo;
 import junior.rafael.financeiro.repository.AtivoRepository;
 import junior.rafael.financeiro.request.AtivoRequest;
@@ -31,6 +32,7 @@ public class AtivoController {
         return ResponseEntity.ok(ativos.stream().map(AtivoResponse::new).toList());
     }
 
+    @Transactional
     @PostMapping("/criar")
     public ResponseEntity<AtivoResponse> criar(@RequestBody AtivoRequest request) {
 

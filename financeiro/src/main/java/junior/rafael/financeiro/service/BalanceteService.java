@@ -76,7 +76,7 @@ public class BalanceteService {
         );
 
         BalanceteResponse despesas = new BalanceteResponse("Despesa",
-                despesasInicialD.subtract(receitasInicialC), BigDecimal.ZERO,
+                despesasInicialD.subtract(despesasInicialC), BigDecimal.ZERO,
                 despesasMovD, despesasMovC,
                 despesasMovD.add(despesasInicialD).subtract(despesasMovC),
                 BigDecimal.ZERO
